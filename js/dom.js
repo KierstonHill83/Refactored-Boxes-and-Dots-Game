@@ -1,16 +1,19 @@
 $(document).on('ready', function() {
 
+  //create a new instance of the game
+ var newGame;
+
+
+
 bootbox.prompt("Are there 1 or 2 players?", function(result) {
-  if (result === 1) {
-    console.log("You chose 1 player");
-  } else if (result === 2) {
+  if (result === "1") {
+    newGame = new Game(1);
+  } else if (result === "2") {
+    newGame = new Game(2);
     console.log("You chose 2 players");
   }
 });
 
-
-//create a new instance of the game
- var newGame = new Game();
 
 
   //When you click on each border  the id will be console logged. newGame is an instance of the Game class. grid is a property of the Game Class. updateClickedBoxArray is a method of the grid.

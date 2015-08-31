@@ -21,17 +21,22 @@ var winningCombos = [
 //Makes a copy of the winning combinations. This will be used in other methods.
 var copyWinCombo = winningCombos.slice(0);
 
+var openSides = [4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4];
+
+var copyOpenSides = openSides.slice(0);
+
 
 //- - - - - - - - //
 // Game Class  //
 //- - - - - - - -//
 
 //Game class that has a property of player, grid class and the current player is set to player 1.
-function Game() {
+function Game(numberPlayers) {
   this.player1 = new Player("#339999");
   this.player2 = new Player("#B93E3E");
   this.currentPlayer = 0; // either 1 or 2
-  this.grid = new Grid(this.player1, this.player2, this.currentPlayer);
+  this.numberPlayers = numberPlayers;
+  this.grid = new Grid(this.player1, this.player2, this.currentPlayer, this.numberPlayers);
 }
 
 
@@ -39,7 +44,7 @@ function Game() {
 // Player Class  //
 //- - - - - - - -//
 
-//Update each player score and give each player a color and se the boxesWon array to an empty array.
+//Update each player score and give each player a color and set the boxesWon array to an empty array.
 function Player(playerColor) {
   this.playerScore = 0;
   this.playerColor = playerColor;
@@ -52,11 +57,12 @@ function Player(playerColor) {
 //- - - - - - - -//
 
 //Put each border ID that was clicked into the empty array. Define what each border ID is. Current Player and the players are used in grid methods, so they are defined here.
-function Grid(player1, player2, currentPlayer) {
+function Grid(player1, player2, currentPlayer, numberPlayers) {
   this.player = [player1, player2];
   this.clickedBorder = [];
   this.$borderID = $(".hor-border, .h1-border2");
   this.currentPlayer = currentPlayer;
+  this.numberPlayers = numberPlayers;
 }
 
 //If the current player is player 1, the current player will reassign to 2 and become player 2. If not, the current player will be player 1. Using an exclusive or. When the currentPlayer switches it will change the text on the screen.
@@ -67,11 +73,20 @@ Grid.prototype.switchTurns = function() {
 
 
 //When a border is clicked the id is pushed into the clickedBorder array and made into a number. If the id that was pushed gets the player a point, they get to go again. Otherwise, the function will be false and they will switchTurns.
+//If you have one players and while checkForWinner is true, do the computer logic and then switch turns. Otherwise, play normal with 2 players.
 Grid.prototype.updateClickedBoxArray = function(borderID) {
   this.clickedBorder.push(parseInt(borderID));
+  this.adjustOpenSides(parseInt(borderID));
     if (this.checkForWinner() === false) {
       this.switchTurns();
+      if (this.numberPlayers === 1) {
+        do {
+          this.computerLogic();
+        } while (this.checkForWinner() === true);
+        this.switchTurns();
+      }
     }
+    console.log(this.clickedBorder);
 };
 
 
@@ -151,6 +166,68 @@ Grid.prototype.resetGrid = function() {
 };
 
 
+//Loop through the winning combos. If the id is found in the winning combo then decrement the copy of open sides for that box.
+Grid.prototype.adjustOpenSides = function(id) {
+  for (var i = 0; i < copyWinCombo.length; i++) {
+    if (copyWinCombo[i].includes(id)) {
+      copyOpenSides[i]--;
+    }
+  }
+  console.log(copyOpenSides);
+};
+
+
+//Loop through the copy of openSides. If numSides is found, break. If we don't find the number of sides, return null. If it is true, loop though the winning combos and if the clicked border is found in the winning combo, return that id.
+Grid.prototype.getOpenSide = function(numSides) {
+  for (var i = 0; i < copyOpenSides.length; i++) {
+    if (copyOpenSides[i] === numSides) {
+      break;
+    }
+  }
+  if (i >= copyOpenSides.length) {
+    return null;
+  }
+  for (var j = 0; j < copyWinCombo[i].length; j++) {
+    if (this.clickedBorder.includes(copyWinCombo[i][j]) === false) {
+      return copyWinCombo[i][j];
+    }
+  }
+};
+
+
+//Set id to equal the border id we want to choose. Push that id into the clickedBorder array.
+Grid.prototype.computerLogic = function() {
+  var id;
+  if ((id = this.getOpenSide(1)) !== null) {
+    this.adjustOpenSides(id);
+    this.clickedBorder.push(id);
+    $("#" + id).unbind("mouseenter");
+    $("#" + id).unbind("mouseleave");
+    $("#" + id).css("background", "#505050");
+    return;
+  } else if ((id = this.getOpenSide(4)) !== null) {
+    this.adjustOpenSides(id);
+    this.clickedBorder.push(id);
+    $("#" + id).unbind("mouseenter");
+    $("#" + id).unbind("mouseleave");
+    $("#" + id).css("background", "#505050");
+    return;
+  } else if ((id = this.getOpenSide(3)) !== null) {
+    this.adjustOpenSides(id);
+    this.clickedBorder.push(id);
+    $("#" + id).unbind("mouseenter");
+    $("#" + id).unbind("mouseleave");
+    $("#" + id).css("background", "#505050");
+    return;
+  } else if ((id = this.getOpenSide(2)) !== null) {
+    this.adjustOpenSides(id);
+    this.clickedBorder.push(id);
+    $("#" + id).unbind("mouseenter");
+    $("#" + id).unbind("mouseleave");
+    $("#" + id).css("background", "#505050");
+    return;
+  }
+};
 
 
 
