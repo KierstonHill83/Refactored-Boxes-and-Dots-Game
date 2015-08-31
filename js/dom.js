@@ -4,13 +4,12 @@ $(document).on('ready', function() {
  var newGame;
 
 
-
+//Prompt the user to choose either 1 or 2 players. If 1 it will create a new instance of the game with 1 player. Or it will create a new instance of the game with 2 players.
 bootbox.prompt("Are there 1 or 2 players?", function(result) {
   if (result === "1") {
     newGame = new Game(1);
   } else if (result === "2") {
     newGame = new Game(2);
-    console.log("You chose 2 players");
   }
 });
 

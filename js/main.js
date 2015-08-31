@@ -75,6 +75,11 @@ Grid.prototype.switchTurns = function() {
 //When a border is clicked the id is pushed into the clickedBorder array and made into a number. If the id that was pushed gets the player a point, they get to go again. Otherwise, the function will be false and they will switchTurns.
 //If you have one players and while checkForWinner is true, do the computer logic and then switch turns. Otherwise, play normal with 2 players.
 Grid.prototype.updateClickedBoxArray = function(borderID) {
+  for (var i = 0; i < this.clickedBorder.length; i++) {
+    if (parseInt(borderID) === this.clickedBorder[i]) {
+      return null;
+    }
+  }
   this.clickedBorder.push(parseInt(borderID));
   this.adjustOpenSides(parseInt(borderID));
     if (this.checkForWinner() === false) {
@@ -163,6 +168,7 @@ Grid.prototype.resetGrid = function() {
   $("#score0").html("0");
   $("#score1").html("0");
   copyWinCombo = winningCombos.slice(0);
+  copyOpenSides = openSides.slice(0);
 };
 
 
