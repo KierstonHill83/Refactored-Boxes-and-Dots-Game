@@ -187,17 +187,16 @@ Grid.prototype.adjustOpenSides = function(id) {
 Grid.prototype.getOpenSide = function(numSides) {
   for (var i = 0; i < copyOpenSides.length; i++) {
     if (copyOpenSides[i] === numSides) {
-      break;
+      for (var j = 0; j < copyWinCombo[i].length; j++) {
+        if (this.clickedBorder.includes(copyWinCombo[i][j]) === false) {
+          if (this.repeatedNumber(copyWinCombo[i][j], numSides) === true) {
+            return copyWinCombo[i][j];
+          }
+        }
+      }
     }
   }
-  if (i >= copyOpenSides.length) {
-    return null;
-  }
-  for (var j = 0; j < copyWinCombo[i].length; j++) {
-    if (this.clickedBorder.includes(copyWinCombo[i][j]) === false) {
-      return copyWinCombo[i][j];
-    }
-  }
+  return null;
 };
 
 
@@ -236,8 +235,27 @@ Grid.prototype.computerLogic = function() {
 };
 
 
-
-
+//Loop through the winning combos. Push the outer array index where the number was found into output. Check the index numbers that are in output against the same index of copyOpenSides. If each index of copyOpenSides does not match the condition in computerLogic...go on to the next condition.
+Grid.prototype.repeatedNumber = function(num, numSides) {
+  var output = [];
+  for (var i = 0; i < copyWinCombo.length; i++) {
+    for (var j = 0; j < copyWinCombo[i].length; j++) {
+      if (num === copyWinCombo[i][j]) {
+        output.push(i);
+      }
+    }
+  }
+  var found = false;
+  for (var i = 0; i < output.length; i++) {
+    if (copyOpenSides[output[i]] >= numSides) {
+      found = true;
+    } else {
+      found = false;
+      break;
+    }
+  }
+  return found;
+};
 
 
 //Experimental. The technology's specification has not been stabilized. .includes() only works if this is in here. Determines whether an array includes a certain element, returning true or false.
@@ -269,3 +287,8 @@ if (!Array.prototype.includes) {
     return false;
   };
 }
+
+
+//make dry
+//add jasmine tests
+//abstract out dom to another file and have pure functions in this file
