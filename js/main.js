@@ -200,7 +200,7 @@ Grid.prototype.getOpenSide = function(numSides) {
 };
 
 
-//Set id to equal the border id we want to choose. Push that id into the clickedBorder array.
+//Set id to equal the border id we want to choose. If the id equals getOpenSide with the parameter of 1 and that does not equal null, then do the following. If not, move on to the next if. Call adjustOpenSides with the id as the parameter. Push that id into the clickedBorder array. Change the css of that border so it will be solid.
 Grid.prototype.computerLogic = function() {
   var id;
   if ((id = this.getOpenSide(1)) !== null) {
@@ -235,7 +235,7 @@ Grid.prototype.computerLogic = function() {
 };
 
 
-//Loop through the winning combos. Push the outer array index where the number was found into output. Check the index numbers that are in output against the same index of copyOpenSides. If each index of copyOpenSides does not match the condition in computerLogic...go on to the next condition.
+//Loop through the winning combos. Push the outer array index where the number was found into output. Check the index numbers that are in output against the same index of copyOpenSides. If each index of copyOpenSides does not match the condition in computerLogic(number of sides)...go on to the next condition.
 Grid.prototype.repeatedNumber = function(num, numSides) {
   var output = [];
   for (var i = 0; i < copyWinCombo.length; i++) {
@@ -287,6 +287,9 @@ if (!Array.prototype.includes) {
     return false;
   };
 }
+
+
+
 
 
 //make dry

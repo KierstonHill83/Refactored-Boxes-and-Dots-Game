@@ -10,6 +10,8 @@ bootbox.prompt("Are there 1 or 2 players?", function(result) {
     newGame = new Game(1);
   } else if (result === "2") {
     newGame = new Game(2);
+  } else {
+    bootbox.alert("Please choose 1 or 2.");
   }
 });
 
